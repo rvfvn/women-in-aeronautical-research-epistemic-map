@@ -4,175 +4,60 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="An interactive epistemic map of the women human computers who transformed NACA and NASA flight research.">
-    <meta name="theme-color" content="#101722">
+    <meta name="theme-color" content="#111925">
     <title>The Human Computer as a Hidden Flight System</title>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <a class="skip-link" href="#map">Skip to the epistemic map</a>
+    <a class="skip-link" href="#graph-canvas">Skip to the epistemic map</a>
 
-    <header class="site-header" aria-label="Site header">
-      <a class="wordmark" href="#top" aria-label="Return to the top">
-        <span class="wordmark-mark" aria-hidden="true">HC</span>
-        <span>Human Computers<br><small>an epistemic map</small></span>
-      </a>
-      <nav class="site-nav" aria-label="Primary navigation">
-        <a href="#map">Map</a>
-        <a href="#method">How to read</a>
-        <a href="#sources">Source notes</a>
-      </nav>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Human Computers: The Women in Aeronautical Research</p>
+        <h1>The Human Computer as a Hidden Flight System</h1>
+      </div>
+      <p class="instruction">Select a domain, then a concept. The graph opens its evidence and relationships beside it.</p>
     </header>
 
-    <main id="top">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-orbit orbit-one" aria-hidden="true"></div>
-        <div class="hero-orbit orbit-two" aria-hidden="true"></div>
-        <div class="hero-copy">
-          <p class="overline">NACA · Langley · 1930s–1960s</p>
-          <h1 id="hero-title">The human computer was a <em>hidden flight system.</em></h1>
-          <p class="hero-deck">Women transformed airflow into evidence—reading instruments, calculating coefficients, checking one another, plotting curves, writing programs, and training engineers. The research system depended on their judgment while its hierarchy obscured their authority.</p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#map">Explore the system</a>
-            <button class="button button-quiet" type="button" data-jump="workflow">Follow one datum</button>
-          </div>
-        </div>
-        <div class="hero-readout" aria-label="Key framing facts">
-          <div class="readout-grid">
-            <article><strong>8</strong><span>linked knowledge domains</span></article>
-            <article><strong>2×</strong><span>independent calculation for verification</span></article>
-            <article><strong>13</strong><span>women located for Golemba's interviews</span></article>
-            <article><strong>∞</strong><span>feedback from test to redesign</span></article>
-          </div>
-          <p class="readout-note"><span aria-hidden="true"></span> Not a family tree: a map of how knowledge, labor, power, and memory interact.</p>
-        </div>
-      </section>
-
-      <section class="thesis-band" aria-label="Central claim">
-        <p class="section-index">00 / Orientation</p>
-        <blockquote>“Computer” named a person, a job classification, a reliability practice, and a component in a larger research architecture.</blockquote>
-        <p>The map keeps those meanings visible at once. Select a domain, then open any node for evidence and connections.</p>
-      </section>
-
-      <section class="map-section" id="map" aria-labelledby="map-title">
-        <div class="section-heading">
-          <div>
-            <p class="overline">Interactive knowledge atlas</p>
-            <h2 id="map-title">Eight views of one system</h2>
-          </div>
-          <p class="section-intro">Start with the system overview or search for a person, instrument, institution, or idea. The map changes scale so detail stays readable.</p>
-        </div>
-
-        <div class="map-controls" role="group" aria-label="Map controls">
-          <button class="control-button is-active" type="button" data-view="overview" aria-pressed="true">Overview</button>
-          <button class="control-button" type="button" data-view="workflow" aria-pressed="false">Data → knowledge</button>
-          <button class="control-button" type="button" data-view="collective" aria-pressed="false">People + collective</button>
-          <button class="control-button" type="button" data-view="memory" aria-pressed="false">Evidence + absences</button>
-          <div class="search-wrap">
-            <label class="sr-only" for="map-search">Search the epistemic map</label>
-            <span class="search-icon" aria-hidden="true">⌕</span>
-            <input id="map-search" type="search" autocomplete="off" placeholder="Search the map…">
-            <div class="search-results" id="search-results" role="listbox" hidden></div>
-          </div>
-        </div>
-
+    <main class="map-section" id="map">
+      <div class="map-toolbar">
         <div class="map-breadcrumb" aria-live="polite">
           <button type="button" id="breadcrumb-home">System overview</button>
           <span aria-hidden="true">/</span>
           <strong id="breadcrumb-current">All domains</strong>
         </div>
 
-        <div class="map-layout">
-          <div class="graph-frame">
-            <div class="graph-canvas" id="graph-canvas" aria-label="Interactive concept graph">
-              <svg class="graph-edges" id="graph-edges" aria-hidden="true"></svg>
-              <div class="graph-nodes" id="graph-nodes"></div>
-            </div>
-            <div class="graph-legend" aria-label="Graph legend">
-              <span><i class="legend-hub"></i> system or domain</span>
-              <span><i class="legend-node"></i> explorable concept</span>
-              <span><i class="legend-line"></i> direct relationship</span>
-            </div>
-          </div>
-
-          <aside class="detail-panel" id="detail-panel" aria-live="polite" aria-labelledby="detail-title">
-            <div class="detail-empty" id="detail-empty">
-              <p class="detail-kicker">Reading station</p>
-              <h3 id="detail-placeholder-title">Select a node</h3>
-              <p>Each node opens a compact study note with its claim, evidence, source documents, and conceptual bridges.</p>
-              <div class="detail-prompt" aria-hidden="true"><span></span><span></span><span></span></div>
-            </div>
-            <div class="detail-content" id="detail-content" hidden></div>
-          </aside>
+        <div class="search-wrap">
+          <label class="sr-only" for="map-search">Search the epistemic map</label>
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input id="map-search" type="search" autocomplete="off" placeholder="Search people, tools, ideas…">
+          <div class="search-results" id="search-results" role="listbox" hidden></div>
         </div>
-      </section>
-
-      <section class="method-section" id="method" aria-labelledby="method-title">
-        <div class="section-heading section-heading-light">
-          <div>
-            <p class="overline">How to read the map</p>
-            <h2 id="method-title">Four lenses prevent a flattened story</h2>
-          </div>
-          <p class="section-intro">A single biography or timeline cannot explain the human-computing system. These lenses keep technical process and institutional power in the same frame.</p>
-        </div>
-        <div class="lens-grid">
-          <article>
-            <span>01</span>
-            <h3>Material</h3>
-            <p>Follow the paper, instruments, calculators, desks, tapes, graphs, cards, and machines through which flight became measurable.</p>
-          </article>
-          <article>
-            <span>02</span>
-            <h3>Social</h3>
-            <p>See checking, mentoring, rides, housing, supervision, and friendship as infrastructure—not merely personal background.</p>
-          </article>
-          <article>
-            <span>03</span>
-            <h3>Institutional</h3>
-            <p>Trace how titles, salaries, segregation, work allocation, authorship, and advocacy distributed authority unevenly.</p>
-          </article>
-          <article>
-            <span>04</span>
-            <h3>Archival</h3>
-            <p>Ask which artifacts survived, which names reached reports, whose memories were recorded, and where the map must show uncertainty.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="continuity-section" aria-labelledby="continuity-title">
-        <div class="continuity-copy">
-          <p class="overline">Continuity through automation</p>
-          <h2 id="continuity-title">The cabinet did not replace the system. It inherited it.</h2>
-          <p>Electronic mainframes accelerated arithmetic, but they arrived without aeronautical software, local operating knowledge, or automatic trust. The women who understood the manual workflow translated its formulas, checks, and expectations into code.</p>
-          <button class="text-button" type="button" data-jump="transition">Open the electronic transition <span aria-hidden="true">→</span></button>
-        </div>
-        <ol class="continuity-track" aria-label="Continuity from manual to electronic computing">
-          <li><span>Hand</span><strong>formula + judgment</strong></li>
-          <li><span>Desk machine</span><strong>mechanized arithmetic</strong></li>
-          <li><span>Plugboard + cards</span><strong>encoded procedure</strong></li>
-          <li><span>FORTRAN</span><strong>portable logic</strong></li>
-          <li><span>Mainframe</span><strong>speed + human verification</strong></li>
-        </ol>
-      </section>
-
-      <section class="sources-section" id="sources" aria-labelledby="sources-title">
-        <div class="section-heading section-heading-light">
-          <div>
-            <p class="overline">Document-level provenance</p>
-            <h2 id="sources-title">The source notes behind the map</h2>
-          </div>
-          <p class="section-intro">The directory supplied eight thematic documents. Their embedded reference numbers did not include the underlying bibliography, so this site attributes claims at the document level and does not pretend those numbers are independently verifiable citations.</p>
-        </div>
-        <div class="source-accordions" id="source-accordions"></div>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div>
-        <strong>The Human Computer as a Hidden Flight System</strong>
-        <p>A study-guide epistemic map built from the supplied course notes.</p>
       </div>
-      <p>Designed to make technical labor visible without reducing a collective history to a list of famous names.</p>
-    </footer>
+
+      <div class="map-layout">
+        <section class="graph-frame" aria-label="Epistemic graph">
+          <div class="graph-canvas" id="graph-canvas" aria-label="Interactive concept graph">
+            <svg class="graph-edges" id="graph-edges" aria-hidden="true"></svg>
+            <div class="graph-nodes" id="graph-nodes"></div>
+          </div>
+          <div class="graph-legend" aria-label="Graph legend">
+            <span><i class="legend-hub"></i> system or domain</span>
+            <span><i class="legend-node"></i> explorable concept</span>
+            <span><i class="legend-line"></i> direct relationship</span>
+          </div>
+        </section>
+
+        <aside class="detail-panel" id="detail-panel" aria-live="polite" aria-labelledby="detail-title">
+          <div class="detail-empty" id="detail-empty">
+            <p class="detail-kicker">Reading panel</p>
+            <h2 id="detail-placeholder-title">Select a node</h2>
+            <p>Open any concept for its claim, supporting detail, and links to the rest of the system.</p>
+          </div>
+          <div class="detail-content" id="detail-content" hidden></div>
+        </aside>
+      </div>
+    </main>
 
     <script src="data.js"></script>
     <script src="app.js"></script>

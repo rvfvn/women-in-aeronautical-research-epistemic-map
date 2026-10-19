@@ -9,8 +9,6 @@
   const breadcrumbHome = document.querySelector("#breadcrumb-home");
   const searchInput = document.querySelector("#map-search");
   const searchResults = document.querySelector("#search-results");
-  const controlButtons = [...document.querySelectorAll("[data-view]")];
-  const sourceAccordions = document.querySelector("#source-accordions");
 
   const sectionById = new Map(data.sections.map(section => [section.id, section]));
   const nodeById = new Map();
@@ -34,14 +32,6 @@
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
-  }
-
-  function setControl(id) {
-    controlButtons.forEach(button => {
-      const active = button.dataset.view === id || (id === "overview" && button.dataset.view === "overview");
-      button.classList.toggle("is-active", active);
-      button.setAttribute("aria-pressed", String(active));
-    });
   }
 
   function makeNode({ id, title, eyebrow, summary, x, y, accent, classes = "", onClick }) {
@@ -101,8 +91,7 @@
         "Institutional hierarchy: lower classifications, segregation, uneven credit, and promotion gates.",
         "Archival filter: reports survived more readily than the labor and artifacts behind them."
       ],
-      evidence: "Across all eight source documents, the same pattern recurs: research success depended on human computation while institutional categories made that dependence easy to overlook.",
-      sources: Object.keys(data.sources),
+      evidence: "Across the research system, the same pattern recurs: aeronautical success depended on human computation while institutional categories made that dependence easy to overlook.",
       accent: "#8ea8d8",
       bridges: data.sections.map(section => ({ label: section.short, sectionId: section.id }))
     }, "root");
@@ -111,9 +100,8 @@
   function renderOverview({ preserveDetail = false } = {}) {
     state.sectionId = null;
     graphCanvas.classList.remove("branch-view");
-    graphCanvas.style.minHeight = "720px";
+    graphCanvas.style.minHeight = `${Math.max(620, window.innerHeight - 160)}px`;
     breadcrumbCurrent.textContent = "All domains";
-    setControl("overview");
     resetGraph();
 
     makeNode({
@@ -150,10 +138,9 @@
     state.sectionId = section.id;
     graphCanvas.classList.add("branch-view");
     const rows = Math.ceil(section.nodes.length / 2);
-    const graphHeight = Math.max(720, rows * 126 + 100);
+    const graphHeight = Math.max(620, window.innerHeight - 160, rows * 126 + 100);
     graphCanvas.style.minHeight = `${graphHeight}px`;
     breadcrumbCurrent.textContent = section.short;
-    setControl(section.id);
     resetGraph();
 
     makeNode({
@@ -233,8 +220,7 @@
       eyebrow: `${section.number} / ${section.short}`,
       summary: section.thesis,
       bullets: section.nodes.slice(0, 4).map(node => node.title),
-      evidence: `This domain contains ${section.nodes.length} explorable concepts drawn from ${section.sources.map(key => data.sources[key].label).join(" and ")}.`,
-      sources: section.sources,
+      evidence: `This domain contains ${section.nodes.length} explorable concepts that place technical practice, institutional structure, and historical interpretation in the same frame.`,
       accent: section.accent,
       bridges: section.bridges.map(sectionId => ({ label: `Continue to ${sectionById.get(sectionId).short}`, sectionId }))
     }, section.id, focus);
@@ -252,10 +238,6 @@
     detailEmpty.hidden = true;
     detailContent.hidden = false;
     detailContent.style.setProperty("--detail-accent", item.accent || "#8ea8d8");
-    const sourcePills = (item.sources || []).map(key => {
-      const source = data.sources[key];
-      return `<span class="source-pill" title="${escapeHtml(source.focus)}">${escapeHtml(source.label)}</span>`;
-    }).join("");
     const bridgeButtons = (item.bridges || []).map(bridge => `
       <button class="bridge-button" type="button"
         ${bridge.sectionId ? `data-bridge-section="${escapeHtml(bridge.sectionId)}"` : ""}
@@ -266,18 +248,15 @@
 
     detailContent.innerHTML = `
       <p class="detail-kicker">${escapeHtml(item.eyebrow || "Study note")}</p>
-      <h3 id="detail-title">${escapeHtml(item.title)}</h3>
+      <h2 id="detail-title">${escapeHtml(item.title)}</h2>
       <p class="detail-summary">${escapeHtml(item.summary)}</p>
       ${(item.bullets || []).length ? `<ul>${item.bullets.map(bullet => `<li>${escapeHtml(bullet)}</li>`).join("")}</ul>` : ""}
       <details open>
         <summary>Why this matters</summary>
         <p>${escapeHtml(item.evidence || "This concept helps explain how the research system joined technical work to institutional structure.")}</p>
       </details>
-      <details>
-        <summary>Source documents</summary>
-        <div class="source-pills">${sourcePills}</div>
-      </details>
       ${bridgeButtons ? `<details><summary>Conceptual bridges</summary><div class="bridge-list">${bridgeButtons}</div></details>` : ""}
+      <p class="citation">Source: <a href="https://uncc.instructure.com/courses/271238/files/34111512?wrap=1" title="Beverly Golemba, HumanComputers- TheWomenInAeronauticalResearc.pdf" target="_blank" rel="noopener"><cite>Human Computers: The Women in Aeronautical Research</cite></a> <a href="https://uncc.instructure.com/courses/271238/files/34111512/download?download_frd=1" target="_blank" rel="noopener"><cite>Download Human Computers: The Women in Aeronautical Research</cite></a>, Beverly Golemba. 1995 manuscript, NASA Langley VA</p>
     `;
 
     detailContent.querySelectorAll("[data-bridge-section]").forEach(button => {
@@ -343,40 +322,6 @@
     });
   }
 
-  function renderSources() {
-    const takeawayBySource = {
-      central: "Defines the human computer as an essential component in a broader flight-research architecture and connects manual calculation to later electronic work.",
-      need: "Explains the numerical bottleneck, the expansion of wind-tunnel data, wartime pressure, and the economic logic behind specialized computing pools.",
-      workflow: "Reconstructs the eight-stage loop and its instruments, verification practices, embodied risks, and workflow inventions.",
-      conditions: "Documents recruiting criteria, salaries, shifts, improvised workspaces, physical strain, housing, transportation, and segregation.",
-      status: "Analyzes how gender, race, professional classification, publicity, authorship, and promotion produced structural subordination.",
-      collective: "Places named technical leaders inside peer verification, training, support networks, and interdisciplinary cooperation.",
-      transition: "Shows that electronic computing inherited human expertise through programs, manuals, plugboards, FORTRAN training, and machine verification.",
-      memory: "Examines Golemba's method, missing personnel records, discarded artifacts, selective memory, and the many workers who remain unnamed."
-    };
-
-    sourceAccordions.innerHTML = Object.entries(data.sources).map(([key, source]) => {
-      const related = data.sections.filter(section => section.sources.includes(key)).map(section => section.short).join(", ");
-      return `
-        <details>
-          <summary><strong>${escapeHtml(source.label)}</strong><span>${escapeHtml(source.focus)}</span></summary>
-          <div class="source-body">
-            <p>${escapeHtml(takeawayBySource[key])}</p>
-            <p><strong>Mapped domains:</strong> ${escapeHtml(related || "Cross-document evidence")}</p>
-            <a href="content/source-notes.md">Read the normalized working notes</a>
-          </div>
-        </details>
-      `;
-    }).join("");
-  }
-
-  controlButtons.forEach(button => {
-    button.addEventListener("click", () => {
-      if (button.dataset.view === "overview") renderOverview();
-      else openSection(button.dataset.view);
-    });
-  });
-
   breadcrumbHome.addEventListener("click", () => renderOverview());
   searchInput.addEventListener("input", event => renderSearchResults(event.target.value));
   searchInput.addEventListener("keydown", event => {
@@ -406,6 +351,5 @@
   });
   resizeObserver.observe(graphCanvas);
 
-  renderSources();
   renderOverview();
 })();
